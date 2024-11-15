@@ -1,22 +1,29 @@
 const Product = require('../models/productModel');
+const facturapi = require('../api/facturapi');
 
 module.exports = {
 
-    getAllProducts: async () => {
-        return await Product.find();
-    },
+    getProducts: async () => await Product.find(),
 
     createProduct: async (product) => {
-        const p = new Product(product);
-        return await p.save();
+        const facturapiProduct = await facturapi.createProduct(product);
+        const newProduct = {
+            _id: facturapiProduct.id,
+            ...product  
+        };
+
+        return await Product.create(newProduct);
     },
 
-    updateProduct: async (_id, product) => {
-        return await Product.findByIdAndUpdate(_id,product);
+    updateProduct: async ({_id, ...args}) => {
+        await facturapi.updateProduct(_id, args);
+        return await Product.findByIdAndUpdate(_id, args, { new: true });
     },
 
-    deleteProduct: async (_id) => { 
+    deleteProduct: async (_id) => {
+        await facturapi.deleteProduct(_id);
         return await Product.findByIdAndDelete(_id);
     },
-    
 }
+
+

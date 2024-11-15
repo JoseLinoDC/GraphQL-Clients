@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
-const categories = require('./enums/categories');
-
 const product = new mongoose.Schema({
+    
     name: { type: String, required: true },
     description: { type: String, default: "" },
     price: { type: Number, required: true },
@@ -12,6 +11,7 @@ const product = new mongoose.Schema({
     createdAt: { type: Date, default: new Date },
     imgs: [String],
     product_key: { type: String, required: true }
+
 });
 
 module.exports = mongoose.model('Product', product);
